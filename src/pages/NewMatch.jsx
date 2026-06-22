@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../auth/AuthContext'
+import { useNotifications } from '../notifications/NotificationsContext'
 import Spinner from '../components/Spinner'
 import {
   DEFAULT_HANDICAP,
@@ -17,6 +18,7 @@ const newSlot = () => ({ key: Math.random().toString(36).slice(2), profileId: ''
 export default function NewMatch() {
   const navigate = useNavigate()
   const { profile, refreshProfile } = useAuth()
+  const { refresh: refreshNotifs } = useNotifications()
 
   const [allPlayers, setAllPlayers] = useState([])
   const [teamA, setTeamA] = useState([{ ...newSlot(), profileId: profile?.id || '' }])
@@ -201,7 +203,7 @@ export default function NewMatch() {
     }
 
     setBusy(true)
-    const { error: rpcError } = await supabase.rpc('record_match', {
+    const { error: rpcError } = await supabase.rpc('create_match', {
       p_sets: cleanSets,
       p_players: players,
     })
@@ -210,7 +212,7 @@ export default function NewMatch() {
       setBusy(false)
       return
     }
-    await refreshProfile()
+    await Promise.all([refreshProfile(), refreshNotifs()])
     navigate('/')
   }
 
@@ -278,7 +280,7 @@ export default function NewMatch() {
       {preview != null && (
         <div className="card flex items-center justify-between p-4">
           <div>
-            <p className="text-sm text-gray-500">Your handicap after this match</p>
+            <p className="text-sm text-gray-500">Your handicap if everyone confirms</p>
             <p className="text-lg font-extrabold text-court-800">
               {formatHandicap(profile.handicap)} →{' '}
               {formatHandicap(Math.max(0, Math.min(50, Number(profile.handicap) + preview)))}
@@ -296,8 +298,13 @@ export default function NewMatch() {
 
       {error && <p className="px-1 text-sm font-medium text-red-600">{error}</p>}
 
+      <p className="px-1 text-center text-xs text-gray-400">
+        Registered opponents and partners must accept this result before any handicaps change.
+        Guests are added automatically.
+      </p>
+
       <button className="btn-primary w-full text-base" onClick={submit} disabled={busy}>
-        {busy ? <Spinner className="h-5 w-5 border-white/40 border-t-white" /> : 'Save match'}
+        {busy ? <Spinner className="h-5 w-5 border-white/40 border-t-white" /> : 'Send match for confirmation'}
       </button>
     </div>
   )

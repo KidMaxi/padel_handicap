@@ -1,15 +1,18 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
-
-const tabs = [
-  { to: '/', label: 'Home', icon: '🏠' },
-  { to: '/players', label: 'Players', icon: '🏆' },
-  { to: '/me', label: 'Me', icon: '👤' },
-]
+import { useNotifications } from '../notifications/NotificationsContext'
 
 export default function Layout({ children }) {
   const navigate = useNavigate()
   const { profile } = useAuth()
+  const { matchCount, friendCount } = useNotifications()
+
+  const tabs = [
+    { to: '/', label: 'Home', icon: '🏠', badge: matchCount },
+    { to: '/players', label: 'Players', icon: '🏆', badge: 0 },
+    { to: '/friends', label: 'Friends', icon: '👥', badge: friendCount },
+    { to: '/me', label: 'Me', icon: '👤', badge: 0 },
+  ]
 
   return (
     <div className="mx-auto flex min-h-full max-w-lg flex-col">
@@ -41,13 +44,18 @@ export default function Layout({ children }) {
             to={t.to}
             end={t.to === '/'}
             className={({ isActive }) =>
-              `flex flex-1 flex-col items-center gap-0.5 py-2.5 text-xs font-medium ${
+              `relative flex flex-1 flex-col items-center gap-0.5 py-2.5 text-xs font-medium ${
                 isActive ? 'text-court-700' : 'text-gray-400'
               }`
             }
           >
             <span className="text-lg">{t.icon}</span>
             {t.label}
+            {t.badge > 0 && (
+              <span className="absolute right-1/2 top-1.5 translate-x-3 rounded-full bg-red-500 px-1.5 text-[10px] font-bold leading-4 text-white">
+                {t.badge}
+              </span>
+            )}
           </NavLink>
         ))}
       </nav>

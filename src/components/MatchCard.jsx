@@ -4,7 +4,7 @@ function playerName(p) {
   return p.profile?.display_name || p.guest_name || 'Unknown'
 }
 
-export default function MatchCard({ match, highlightProfileId }) {
+export default function MatchCard({ match, highlightProfileId, statusLabel, statusTone, footer }) {
   const players = match.match_players || []
   const teamA = players.filter((p) => p.team === 'A')
   const teamB = players.filter((p) => p.team === 'B')
@@ -55,20 +55,34 @@ export default function MatchCard({ match, highlightProfileId }) {
   // Show the current user's handicap change for this match, if present.
   const mine = players.find((p) => highlightProfileId && p.profile_id === highlightProfileId)
 
+  const toneClass =
+    statusTone === 'warn'
+      ? 'bg-amber-100 text-amber-700'
+      : statusTone === 'muted'
+        ? 'bg-gray-100 text-gray-500'
+        : 'bg-court-100 text-court-700'
+
   return (
     <div className="card p-4">
       <div className="mb-2 flex items-center justify-between">
         <span className="text-xs font-medium text-gray-400">{date}</span>
-        {mine && mine.handicap_delta != null && (
-          <span
-            className={`rounded-full px-2 py-0.5 text-xs font-bold ${
-              Number(mine.handicap_delta) < 0
-                ? 'bg-court-100 text-court-700'
-                : 'bg-red-100 text-red-600'
-            }`}
-          >
-            hcp {formatDelta(mine.handicap_delta)}
+        {statusLabel ? (
+          <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${toneClass}`}>
+            {statusLabel}
           </span>
+        ) : (
+          mine &&
+          mine.handicap_delta != null && (
+            <span
+              className={`rounded-full px-2 py-0.5 text-xs font-bold ${
+                Number(mine.handicap_delta) < 0
+                  ? 'bg-court-100 text-court-700'
+                  : 'bg-red-100 text-red-600'
+              }`}
+            >
+              hcp {formatDelta(mine.handicap_delta)}
+            </span>
+          )
         )}
       </div>
       <div className="space-y-1.5">
@@ -76,6 +90,7 @@ export default function MatchCard({ match, highlightProfileId }) {
         <div className="h-px bg-gray-100" />
         <Team side="B" list={teamB} />
       </div>
+      {footer && <div className="mt-3 border-t border-gray-100 pt-3">{footer}</div>}
     </div>
   )
 }

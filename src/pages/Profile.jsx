@@ -3,9 +3,7 @@ import { supabase } from '../lib/supabase'
 import { useAuth } from '../auth/AuthContext'
 import MatchCard from '../components/MatchCard'
 import Spinner from '../components/Spinner'
-
-const MATCH_SELECT =
-  '*, match_players(*, profile:profiles(id, display_name, handicap))'
+import { MATCH_SELECT } from '../lib/queries'
 
 export default function Profile() {
   const { profile, user, signOut, refreshProfile } = useAuth()
@@ -25,6 +23,7 @@ export default function Profile() {
       .from('match_players')
       .select(`match_id, matches!inner(${MATCH_SELECT})`)
       .eq('profile_id', profile.id)
+      .eq('matches.status', 'confirmed')
       .order('played_at', { foreignTable: 'matches', ascending: false })
       .limit(30)
       .then(({ data }) => {
