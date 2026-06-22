@@ -51,10 +51,13 @@ export default function Profile() {
 
   return (
     <div className="space-y-5">
-      <div className="card overflow-hidden">
-        <div className="relative bg-gradient-to-br from-court-800 to-court-950 px-5 pb-12 pt-6">
-          <div className="absolute inset-0 court-lines opacity-40" />
-          <div className="relative flex items-center gap-4">
+      {/* Profile hero with integrated stats */}
+      <div className="relative overflow-hidden rounded-[1.75rem] bg-ink shadow-lift">
+        <div className="absolute inset-0 bg-gradient-to-br from-court-800 via-court-900 to-ink" />
+        <div className="absolute inset-0 court-lines opacity-40" />
+        <div className="absolute -right-8 top-4 h-32 w-32 rounded-full bg-ball/15 blur-3xl" />
+        <div className="relative p-6">
+          <div className="flex items-center gap-4">
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-ball font-display text-2xl font-bold text-ink shadow-ball">
               {(profile?.display_name || '?').charAt(0).toUpperCase()}
             </div>
@@ -65,22 +68,23 @@ export default function Profile() {
               <p className="truncate text-sm text-court-100/70">{user?.email}</p>
             </div>
           </div>
-        </div>
 
-        <div className="-mt-8 grid grid-cols-3 gap-2 px-4 text-center">
-          <Stat label="Handicap" value={Number(profile?.handicap ?? 0).toFixed(1)} />
-          <Stat label="Played" value={profile?.matches_played ?? 0} />
-          <Stat label="Wins" value={loading ? '—' : wins} />
-        </div>
-
-        <div className="p-5 pt-4">
-          <label className="label">Display name</label>
-          <div className="flex gap-2">
-            <input className="input" value={name} onChange={(e) => setName(e.target.value)} />
-            <button className="btn-primary px-5" onClick={saveName} disabled={saving}>
-              {saving ? '…' : 'Save'}
-            </button>
+          <div className="mt-6 grid grid-cols-3 divide-x divide-white/10 rounded-2xl border border-white/10 bg-white/5 backdrop-blur">
+            <Stat label="Handicap" value={Number(profile?.handicap ?? 0).toFixed(1)} accent />
+            <Stat label="Played" value={profile?.matches_played ?? 0} />
+            <Stat label="Wins" value={loading ? '—' : wins} />
           </div>
+        </div>
+      </div>
+
+      {/* Edit name */}
+      <div className="card p-5">
+        <label className="label">Display name</label>
+        <div className="flex gap-2">
+          <input className="input" value={name} onChange={(e) => setName(e.target.value)} />
+          <button className="btn-primary px-5" onClick={saveName} disabled={saving}>
+            {saving ? '…' : 'Save'}
+          </button>
         </div>
       </div>
 
@@ -91,7 +95,7 @@ export default function Profile() {
             <Spinner />
           </div>
         ) : matches.length === 0 ? (
-          <p className="card p-6 text-center text-gray-500">No matches yet.</p>
+          <p className="card p-6 text-center text-ink-400">No matches yet.</p>
         ) : (
           <div className="space-y-3">
             {matches.map((m) => (
@@ -108,11 +112,19 @@ export default function Profile() {
   )
 }
 
-function Stat({ label, value }) {
+function Stat({ label, value, accent }) {
   return (
-    <div className="rounded-2xl border border-black/5 bg-white py-3 shadow-soft">
-      <p className="stat-num text-court-700">{value}</p>
-      <p className="text-xs font-medium text-ink-400">{label}</p>
+    <div className="px-2 py-3.5 text-center">
+      <p
+        className={`font-display text-2xl font-extrabold tabular-nums ${
+          accent ? 'text-ball' : 'text-white'
+        }`}
+      >
+        {value}
+      </p>
+      <p className="mt-0.5 text-[11px] font-medium uppercase tracking-wide text-court-100/60">
+        {label}
+      </p>
     </div>
   )
 }
