@@ -10,28 +10,118 @@ body,
 
 body {
   margin: 0;
-  background: #f4f6f5;
-  color: #0f1f1a;
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  color: #0d1411;
+  background-color: #eef2f0;
   -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* App surface uses a very subtle turf-tinted gradient. */
+.app-surface {
+  background:
+    radial-gradient(120% 60% at 50% -10%, rgba(34, 169, 107, 0.1), transparent 60%),
+    linear-gradient(180deg, #f3f7f4 0%, #eaf0ec 100%);
+}
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: 'Sora', ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: -0.02em;
+  }
 }
 
 @layer components {
+  /* ---------- Buttons ---------- */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 font-semibold transition active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none;
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 font-semibold transition-all duration-200 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50;
   }
   .btn-primary {
-    @apply btn bg-court-600 text-white hover:bg-court-700;
+    @apply btn text-white shadow-soft;
+    background-image: linear-gradient(135deg, #18935d 0%, #0e4733 100%);
+  }
+  .btn-primary:hover {
+    box-shadow: 0 10px 28px -8px rgba(18, 110, 71, 0.55);
+    transform: translateY(-1px);
+  }
+  .btn-ball {
+    @apply btn text-ink shadow-ball;
+    background-image: linear-gradient(135deg, #e6ff5c 0%, #c9e637 100%);
+  }
+  .btn-ball:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 30px -6px rgba(189, 216, 56, 0.7);
   }
   .btn-ghost {
-    @apply btn bg-white text-court-700 border border-court-200 hover:bg-court-50;
+    @apply btn border border-court-200 bg-white/80 text-court-700 backdrop-blur hover:bg-white;
   }
+  .btn-dark {
+    @apply btn bg-ink text-white hover:bg-ink-800;
+  }
+
+  /* ---------- Surfaces ---------- */
   .card {
-    @apply rounded-2xl bg-white shadow-sm border border-black/5;
+    @apply rounded-3xl border border-black/[0.05] bg-white shadow-soft;
   }
+  .glass {
+    @apply rounded-3xl border border-white/60 bg-white/70 shadow-glass backdrop-blur-xl;
+  }
+  /* Glass over dark backgrounds — like padel court glass walls. */
+  .glass-dark {
+    @apply rounded-3xl border border-white/15 shadow-glass backdrop-blur-xl;
+    background-image: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.12) 0%,
+      rgba(255, 255, 255, 0.04) 100%
+    );
+  }
+
+  /* ---------- Form ---------- */
   .input {
-    @apply w-full rounded-xl border border-black/10 bg-white px-3.5 py-2.5 outline-none focus:border-court-500 focus:ring-2 focus:ring-court-200;
+    @apply w-full rounded-2xl border border-black/10 bg-white px-4 py-3 text-ink outline-none transition focus:border-court-500 focus:ring-4 focus:ring-court-500/15;
+  }
+  .input-dark {
+    @apply w-full rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white placeholder-white/40 outline-none backdrop-blur transition focus:border-ball/60 focus:ring-4 focus:ring-ball/20;
   }
   .label {
-    @apply text-sm font-medium text-gray-600;
+    @apply mb-1.5 block text-sm font-medium text-ink-400;
   }
+
+  /* ---------- Bits ---------- */
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-sm font-medium text-white/90 backdrop-blur;
+  }
+  .pill {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold;
+  }
+  .section-title {
+    @apply mb-2.5 px-1 text-xs font-bold uppercase tracking-[0.12em] text-ink-400;
+  }
+  .stat-num {
+    @apply font-display text-2xl font-bold tabular-nums;
+  }
+}
+
+/* Court-line texture: faint white lines like painted court markings. */
+.court-lines {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+/* Subtle turf grain. */
+.turf-grain {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 0.5px, transparent 0.5px);
+  background-size: 6px 6px;
+}
+
+.text-gradient {
+  background: linear-gradient(120deg, #4cc489 0%, #d7f24a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }

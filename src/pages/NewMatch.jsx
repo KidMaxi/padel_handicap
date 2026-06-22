@@ -218,15 +218,29 @@ export default function NewMatch() {
 
   return (
     <div className="space-y-4">
-      <h1 className="px-1 text-xl font-extrabold text-court-800">New match</h1>
+      <div>
+        <h1 className="font-display text-2xl font-extrabold text-ink">New match</h1>
+        <p className="text-sm text-ink-400">Set the line-up, enter the score, send for confirmation.</p>
+      </div>
 
       <TeamEditor title="Team A" team={teamA} setTeam={setTeamA} hcp={teamAHcp} color="text-court-700" />
 
-      <div className="text-center text-sm font-semibold text-gray-400">
-        win chance {winChanceA}% · {100 - winChanceA}%
+      {/* Win probability bar */}
+      <div className="px-1">
+        <div className="mb-1 flex justify-between text-xs font-bold">
+          <span className="text-court-700">Team A {winChanceA}%</span>
+          <span className="text-ink-400">{100 - winChanceA}% Team B</span>
+        </div>
+        <div className="flex h-2.5 overflow-hidden rounded-full bg-gray-200">
+          <div
+            className="bg-gradient-to-r from-court-500 to-court-700 transition-all duration-300"
+            style={{ width: `${winChanceA}%` }}
+          />
+          <div className="flex-1 bg-ink-400/30" />
+        </div>
       </div>
 
-      <TeamEditor title="Team B" team={teamB} setTeam={setTeamB} hcp={teamBHcp} color="text-blue-700" />
+      <TeamEditor title="Team B" team={teamB} setTeam={setTeamB} hcp={teamBHcp} color="text-ink-600" />
 
       <div className="card p-4">
         <h3 className="mb-3 font-bold text-gray-700">Scores</h3>

@@ -90,14 +90,15 @@ export default function Friends() {
 
   return (
     <div className="space-y-6">
-      <h1 className="px-1 text-xl font-extrabold text-court-800">Friends</h1>
+      <div>
+        <h1 className="font-display text-2xl font-extrabold text-ink">Friends</h1>
+        <p className="text-sm text-ink-400">Build your circle and challenge them.</p>
+      </div>
 
       {/* Incoming requests */}
       {incoming.length > 0 && (
         <section>
-          <h2 className="mb-2 px-1 text-sm font-bold uppercase tracking-wide text-amber-600">
-            Friend requests
-          </h2>
+          <h2 className="section-title !text-court-700">● Friend requests</h2>
           <div className="card divide-y divide-gray-100">
             {incoming.map((f) => (
               <div key={f.id} className="flex items-center gap-3 p-3">
@@ -127,9 +128,7 @@ export default function Friends() {
 
       {/* Add friends */}
       <section>
-        <h2 className="mb-2 px-1 text-sm font-bold uppercase tracking-wide text-gray-400">
-          Add a friend
-        </h2>
+        <h2 className="section-title">Add a friend</h2>
         <input
           className="input"
           placeholder="Search players by name…"
@@ -164,9 +163,7 @@ export default function Friends() {
 
       {/* Your friends */}
       <section>
-        <h2 className="mb-2 px-1 text-sm font-bold uppercase tracking-wide text-gray-400">
-          Your friends ({friends.length})
-        </h2>
+        <h2 className="section-title">Your friends ({friends.length})</h2>
         {friends.length === 0 ? (
           <p className="card p-6 text-center text-gray-500">
             No friends yet — search above to add some.
@@ -191,9 +188,7 @@ export default function Friends() {
       {/* Sent requests */}
       {outgoing.length > 0 && (
         <section>
-          <h2 className="mb-2 px-1 text-sm font-bold uppercase tracking-wide text-gray-400">
-            Sent requests
-          </h2>
+          <h2 className="section-title">Sent requests</h2>
           <div className="card divide-y divide-gray-100">
             {outgoing.map((f) => (
               <div key={f.id} className="flex items-center gap-3 p-3">

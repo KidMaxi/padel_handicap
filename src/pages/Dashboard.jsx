@@ -4,6 +4,7 @@ import { useAuth } from '../auth/AuthContext'
 import { useNotifications } from '../notifications/NotificationsContext'
 import { MATCH_SELECT } from '../lib/queries'
 import MatchCard from '../components/MatchCard'
+import CourtBackdrop from '../components/CourtBackdrop'
 import Spinner from '../components/Spinner'
 import { formatDelta } from '../lib/handicap'
 
@@ -78,26 +79,32 @@ export default function Dashboard() {
   })()
 
   return (
-    <div className="space-y-5">
-      {/* Handicap card */}
-      <div className="card overflow-hidden">
-        <div className="bg-court-700 px-5 py-6 text-white">
-          <p className="text-sm text-court-100">Your handicap</p>
-          <div className="flex items-end gap-2">
-            <span className="text-5xl font-extrabold tabular-nums">
+    <div className="space-y-6">
+      {/* Handicap hero */}
+      <div className="relative overflow-hidden rounded-[1.75rem] bg-ink shadow-lift">
+        <div className="absolute inset-0 bg-gradient-to-br from-court-800 via-court-900 to-ink" />
+        <div className="absolute inset-0 court-lines opacity-50" />
+        <CourtBackdrop className="absolute -right-6 -top-8 h-64 w-auto text-court-300/15" />
+        <div className="absolute -right-10 top-6 h-40 w-40 rounded-full bg-ball/20 blur-3xl" />
+        <div className="relative px-6 py-7 text-white">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-court-200">
+            Your handicap
+          </p>
+          <div className="mt-1 flex items-end gap-3">
+            <span className="font-display text-6xl font-extrabold leading-none tabular-nums">
               {profile ? Number(profile.handicap).toFixed(1) : '—'}
             </span>
             {lastDelta != null && (
               <span
-                className={`mb-2 rounded-full px-2 py-0.5 text-sm font-bold ${
-                  Number(lastDelta) < 0 ? 'bg-white/20' : 'bg-red-500/40'
+                className={`mb-2 rounded-full px-2.5 py-1 text-sm font-bold ${
+                  Number(lastDelta) < 0 ? 'bg-ball text-ink' : 'bg-red-500/80 text-white'
                 }`}
               >
-                {formatDelta(lastDelta)} last match
+                {formatDelta(lastDelta)}
               </span>
             )}
           </div>
-          <p className="mt-1 text-sm text-court-100">
+          <p className="mt-2 text-sm text-court-100/80">
             {profile?.matches_played || 0} matches played · lower is better
           </p>
         </div>
@@ -106,28 +113,26 @@ export default function Dashboard() {
       {/* Needs your confirmation */}
       {incoming.length > 0 && (
         <div>
-          <h2 className="mb-2 px-1 text-sm font-bold uppercase tracking-wide text-amber-600">
-            Needs your confirmation
-          </h2>
+          <h2 className="section-title !text-court-700">● Needs your confirmation</h2>
           <div className="space-y-3">
             {incoming.map((m) => (
               <MatchCard
                 key={m.id}
                 match={m}
                 highlightProfileId={profile?.id}
-                statusLabel="Confirm this result?"
+                statusLabel="Confirm result?"
                 statusTone="warn"
                 footer={
                   <div className="flex gap-2">
                     <button
-                      className="btn-primary flex-1"
+                      className="btn-primary flex-1 py-2.5"
                       disabled={busyId === m.id}
                       onClick={() => respond(m.id, true)}
                     >
                       Accept
                     </button>
                     <button
-                      className="btn-ghost flex-1 !text-red-600 !border-red-200 hover:!bg-red-50"
+                      className="btn-ghost flex-1 py-2.5 !border-red-200 !text-red-600 hover:!bg-red-50"
                       disabled={busyId === m.id}
                       onClick={() => respond(m.id, false)}
                     >
@@ -144,9 +149,7 @@ export default function Dashboard() {
       {/* Waiting on others */}
       {waiting.length > 0 && (
         <div>
-          <h2 className="mb-2 px-1 text-sm font-bold uppercase tracking-wide text-gray-400">
-            Waiting for confirmation
-          </h2>
+          <h2 className="section-title">Waiting for confirmation</h2>
           <div className="space-y-3">
             {waiting.map((m) => (
               <MatchCard
@@ -163,18 +166,20 @@ export default function Dashboard() {
 
       {/* Recent confirmed matches */}
       <div>
-        <h2 className="mb-2 px-1 text-sm font-bold uppercase tracking-wide text-gray-400">
-          Recent matches
-        </h2>
+        <h2 className="section-title">Recent matches</h2>
         {loading ? (
           <div className="flex justify-center py-10">
             <Spinner />
           </div>
         ) : confirmed.length === 0 ? (
-          <div className="card p-8 text-center text-gray-500">
-            <p className="text-3xl">🎾</p>
-            <p className="mt-2 font-medium">No matches yet</p>
-            <p className="text-sm">Tap “New match” to record your first game.</p>
+          <div className="card flex flex-col items-center p-10 text-center">
+            <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-court-50 text-2xl">
+              🎾
+            </div>
+            <p className="font-display font-bold text-ink">No matches yet</p>
+            <p className="mt-1 text-sm text-ink-400">
+              Tap the green button to record your first game.
+            </p>
           </div>
         ) : (
           <div className="space-y-3">

@@ -1,11 +1,11 @@
 {
-  "name": "Padel Handicap",
-  "short_name": "Padel",
-  "description": "Track padel matches and your golf-style handicap.",
+  "name": "Padel Club — your game, measured",
+  "short_name": "Padel Club",
+  "description": "Track padel matches and your golf-style handicap on a premium padel platform.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0e4d39",
-  "theme_color": "#0f766e",
+  "background_color": "#062a1e",
+  "theme_color": "#0A3B2C",
   "icons": [
     {
       "src": "/icon.svg",
